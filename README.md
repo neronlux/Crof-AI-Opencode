@@ -188,7 +188,7 @@ That metadata includes:
 - `modalities`
 - `interleaved` when available
 
-This was only applied where there was an exact canonical match. Variants that only exist in Crof were left minimal on purpose.
+This was only applied where there was an exact canonical match. The Kimi Lightning and GLM-5 Lightning variants are the exceptions: they keep their own display names and Crof backend `id` values, but reuse the standard family metadata so they behave more like the main Kimi and GLM-5 models in OpenCode.
 
 ## Why This Is A Safe OpenCode Custom Provider
 
@@ -306,7 +306,7 @@ Examples:
 - `z-ai/glm-4.7-flash` -> `interleaved.field = reasoning_details`
 - `minimax/minimax-m2.5` -> `interleaved.field = reasoning_details`
 
-The lightning variants were not given inferred reasoning metadata because they do not have exact canonical `models.dev` records.
+Kimi Lightning and GLM-5 Lightning were explicitly aligned to the standard Kimi and GLM-5 family metadata to reduce behavior differences while keeping their own backend `id` values and display names.
 
 ## Limits
 
@@ -361,7 +361,7 @@ Some things were intentionally not added or not assumed.
 
 - no API keys are stored in this repo
 - no default `model` is forced in the template
-- no metadata was guessed for Crof-only variants beyond `id`, `name`, and `limit`
+- no metadata was guessed for Crof-only variants beyond `id`, `name`, and `limit`, except for Kimi Lightning and GLM-5 Lightning which are intentionally aligned to their standard family metadata
 - `structured_output` was not added because it does not appear to be supported on custom provider model entries in the current OpenCode schema
 
 ## How To Use This Globally
