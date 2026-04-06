@@ -6,6 +6,132 @@ This repo documents a configuration that was tested against Crof's OpenAI-compat
 
 It also includes a reusable `opencode.json` template with the Crof provider only.
 
+## Quick Start
+
+Most users will want to copy the provider config directly into their own `opencode.json`.
+
+Use this template as-is, then add your Crof API key separately in OpenCode auth storage at `~/.local/share/opencode/auth.json`.
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "crof": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "CrofAI",
+      "options": {
+        "baseURL": "https://crof.ai/v1"
+      },
+      "models": {
+        "moonshotai/kimi-k2.5": {
+          "id": "kimi-k2.5",
+          "name": "Kimi K2.5",
+          "limit": { "context": 262144, "output": 262144 },
+          "family": "kimi",
+          "attachment": true,
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "modalities": { "input": ["text", "image", "video"], "output": ["text"] },
+          "interleaved": { "field": "reasoning_details" }
+        },
+        "moonshotai/kimi-k2.5:lightning": {
+          "id": "kimi-k2.5-lightning",
+          "name": "Kimi K2.5 (lightning)",
+          "limit": { "context": 131072, "output": 32768 }
+        },
+        "z-ai/glm-5": {
+          "id": "glm-5",
+          "name": "GLM-5",
+          "limit": { "context": 202752, "output": 202752 },
+          "family": "glm",
+          "attachment": false,
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "modalities": { "input": ["text"], "output": ["text"] },
+          "interleaved": { "field": "reasoning_content" }
+        },
+        "z-ai/glm-5:lightning": {
+          "id": "glm-5-lightning",
+          "name": "GLM-5 (lightning)",
+          "limit": { "context": 202752, "output": 202752 }
+        },
+        "z-ai/glm-4.7": {
+          "id": "glm-4.7",
+          "name": "GLM-4.7",
+          "limit": { "context": 202752, "output": 202752 },
+          "family": "glm",
+          "attachment": false,
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "modalities": { "input": ["text"], "output": ["text"] },
+          "interleaved": { "field": "reasoning_details" }
+        },
+        "z-ai/glm-4.7-flash": {
+          "id": "glm-4.7-flash",
+          "name": "GLM-4.7-Flash",
+          "limit": { "context": 202752, "output": 131072 },
+          "family": "glm",
+          "attachment": false,
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "modalities": { "input": ["text"], "output": ["text"] },
+          "interleaved": { "field": "reasoning_details" }
+        },
+        "google/gemma-4-31b-it": {
+          "id": "gemma-4-31b-it",
+          "name": "Gemma 4 31B",
+          "limit": { "context": 262144, "output": 262144 },
+          "family": "gemma",
+          "attachment": true,
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "modalities": { "input": ["text", "image", "video"], "output": ["text"] }
+        },
+        "minimax/minimax-m2.5": {
+          "id": "minimax-m2.5",
+          "name": "MiniMax M2.5",
+          "limit": { "context": 204800, "output": 131072 },
+          "family": "minimax",
+          "attachment": false,
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "modalities": { "input": ["text"], "output": ["text"] },
+          "interleaved": { "field": "reasoning_details" }
+        },
+        "qwen/qwen3.5-397b-a17b": {
+          "id": "qwen3.5-397b-a17b",
+          "name": "Qwen3.5 397B A17B",
+          "limit": { "context": 262144, "output": 262144 },
+          "family": "qwen",
+          "attachment": true,
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "modalities": { "input": ["text", "image", "video"], "output": ["text"] }
+        },
+        "deepseek/deepseek-v3.2": {
+          "id": "deepseek-v3.2",
+          "name": "DeepSeek V3.2",
+          "limit": { "context": 163840, "output": 163840 },
+          "family": "deepseek",
+          "attachment": false,
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "modalities": { "input": ["text"], "output": ["text"] }
+        }
+      }
+    }
+  }
+}
+```
+
 ## Goal
 
 The goal of this setup is to give OpenCode users a Crof provider that is:
@@ -20,7 +146,7 @@ The goal of this setup is to give OpenCode users a Crof provider that is:
 
 This setup was built from two sources:
 
-1. `https://crof.ai/docs`
+1. [https://crof.ai/docs](https://crof.ai/docs)
 2. `https://models.dev/api.json`
 
 Each source was used for a different purpose.
@@ -38,9 +164,7 @@ Crof's docs were used as the source of truth for:
 
 From Crof's docs, the provider is configured against:
 
-```text
-https://crof.ai/v1
-```
+[https://crof.ai/v1](https://crof.ai/v1)
 
 And model limits are taken from the documented `/v1/models` response shape.
 
@@ -74,7 +198,7 @@ For this setup, the provider is:
 
 - provider ID: `crof`
 - adapter: `@ai-sdk/openai-compatible`
-- base URL: `https://crof.ai/v1`
+- base URL: [https://crof.ai/v1](https://crof.ai/v1)
 
 The config uses a conservative approach:
 
@@ -271,7 +395,7 @@ This setup was checked using the following process:
 1. Crof docs were reviewed for API behavior, supported parameters, and `/v1/models` response structure.
 2. OpenCode provider docs and config schema were reviewed for custom provider support and model field compatibility.
 3. The live Crof `/v1/models` endpoint was queried to verify model IDs and limits.
-4. A live request to `https://crof.ai/v1/chat/completions` succeeded with a working model.
+4. A live request to [https://crof.ai/v1/chat/completions](https://crof.ai/v1/chat/completions) succeeded with a working model.
 5. Broken models were removed after direct testing in OpenCode.
 
 Example verification request:
