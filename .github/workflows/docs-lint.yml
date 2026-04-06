@@ -9,6 +9,7 @@ on:
 
 jobs:
   lint:
+    # Keep CI behavior simple and aligned with the local lint command.
     name: Lint Docs And Secrets
     runs-on: ubuntu-latest
 
