@@ -1,6 +1,6 @@
 # Crof-AI-OpenCode
 
-Working reference for using `crof.ai` as a safe OpenCode custom provider.
+Working reference for using [Crof.ai](https://crof.ai) as a safe [OpenCode](https://opencode.ai/) custom provider.
 
 This repo documents a configuration that was tested against Crof's OpenAI-compatible API and shaped to work well with OpenCode without relying on undocumented behavior.
 
