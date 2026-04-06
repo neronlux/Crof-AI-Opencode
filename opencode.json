@@ -25,12 +25,11 @@
           "name": "Kimi K2.5 (lightning)",
           "limit": { "context": 131072, "output": 32768 },
           "family": "kimi",
-          "attachment": true,
-          "reasoning": true,
+          "attachment": false,
+          "reasoning": false,
           "tool_call": true,
           "temperature": true,
-          "modalities": { "input": ["text", "image", "video"], "output": ["text"] },
-          "interleaved": { "field": "reasoning_details" }
+          "modalities": { "input": ["text"], "output": ["text"] }
         },
         "z-ai/glm-5": {
           "id": "glm-5",
@@ -50,11 +49,10 @@
           "limit": { "context": 202752, "output": 202752 },
           "family": "glm",
           "attachment": false,
-          "reasoning": true,
+          "reasoning": false,
           "tool_call": true,
           "temperature": true,
-          "modalities": { "input": ["text"], "output": ["text"] },
-          "interleaved": { "field": "reasoning_content" }
+          "modalities": { "input": ["text"], "output": ["text"] }
         },
         "z-ai/glm-4.7": {
           "id": "glm-4.7",

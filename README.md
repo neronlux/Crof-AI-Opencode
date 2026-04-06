@@ -188,7 +188,60 @@ That metadata includes:
 - `modalities`
 - `interleaved` when available
 
-This was only applied where there was an exact canonical match. The Kimi Lightning and GLM-5 Lightning variants are the exceptions: they keep their own display names and Crof backend `id` values, but reuse the standard family metadata so they behave more like the main Kimi and GLM-5 models in OpenCode.
+This was only applied where there was an exact canonical match. The Lightning variants (Kimi K2.5 Lightning and GLM-5 Lightning) are intentionally downgraded: they keep `tool_call: true` and `temperature: true` but drop `reasoning`, `attachment`, `interleaved`, and multimodal input because they are speed-optimized models that trade off reasoning depth and vision capabilities for faster responses.
+
+## Models API Verification
+
+Crof's `/v1/models` endpoint returns the following fields for each model:
+
+- `id`
+- `context_length`
+- `max_completion_tokens`
+- `pricing`
+
+The `/v1/models` response does **not** include capability metadata like `reasoning`, `tool_call`, `modalities`, or `attachment`. Those fields must be inferred and set manually in the OpenCode config.
+
+All `limit.context` and `limit.output` values in this config were verified against the live `/v1/models` API response. The following table shows the exact match:
+
+| Model | API `context_length` | API `max_completion_tokens` | Config `limit.context` | Config `limit.output` |
+|---|---|---|---|---|
+| `kimi-k2.5` | 262144 | 262144 | 262144 | 262144 |
+| `kimi-k2.5-lightning` | 131072 | 32768 | 131072 | 32768 |
+| `glm-5` | 202752 | 202752 | 202752 | 202752 |
+| `glm-5-lightning` | 202752 | 202752 | 202752 | 202752 |
+| `glm-4.7` | 202752 | 202752 | 202752 | 202752 |
+| `glm-4.7-flash` | 202752 | 131072 | 202752 | 131072 |
+| `gemma-4-31b-it` | 262144 | 262144 | 262144 | 262144 |
+| `minimax-m2.5` | 204800 | 131072 | 204800 | 131072 |
+| `qwen3.5-397b-a17b` | 262144 | 262144 | 262144 | 262144 |
+| `deepseek-v3.2` | 163840 | 163840 | 163840 | 163840 |
+
+## Lightning Model Limitations
+
+The Lightning variants are speed-optimized models. They differ from their base counterparts in important ways:
+
+- **No reasoning**: Lightning models do not produce extended reasoning output. They are configured with `reasoning: false` and no `interleaved` field.
+- **No vision**: Lightning models are text-only. They are configured with `attachment: false` and `modalities.input: ["text"]`.
+- **Tool calling**: Lightning models still support tool calling, but may be less reliable than base models for complex agentic workflows.
+- **Lower output limits**: Kimi K2.5 Lightning has a much smaller output limit (32768 vs 262144) which can cause truncation on long responses.
+
+If you experience pausing or failed tool calls with Lightning models, switch to the base model (e.g. `moonshotai/kimi-k2.5` instead of `moonshotai/kimi-k2.5:lightning`).
+
+### Why Lightning Models Were Downgraded
+
+The Lightning entries were initially configured with the same `reasoning: true`, `attachment`, `interleaved`, and multimodal settings as their base models. This caused two problems in practice:
+
+1. **Model pausing**: OpenCode expected reasoning output (via `interleaved`) that Lightning models do not produce, causing the stream to hang while waiting for reasoning tokens that never arrive.
+2. **Failed tool calls**: Lightning models struggle with complex tool-calling formats. Marking them as `reasoning: true` made OpenCode expect deeper agentic behavior that the speed-optimized models cannot reliably deliver.
+
+The fix was to downgrade Lightning metadata to match reality:
+
+- `reasoning: false` — no extended thinking output
+- `attachment: false` — no image or video input
+- `interleaved` removed — no reasoning stream field
+- `modalities.input: ["text"]` — text-only
+
+This prevents OpenCode from expecting capabilities the Lightning models do not have, eliminating the pausing and reducing tool call failures.
 
 ## Why This Is A Safe OpenCode Custom Provider
 
@@ -306,7 +359,7 @@ Examples:
 - `z-ai/glm-4.7-flash` -> `interleaved.field = reasoning_details`
 - `minimax/minimax-m2.5` -> `interleaved.field = reasoning_details`
 
-Kimi Lightning and GLM-5 Lightning were explicitly aligned to the standard Kimi and GLM-5 family metadata to reduce behavior differences while keeping their own backend `id` values and display names.
+The Lightning variants (Kimi K2.5 Lightning and GLM-5 Lightning) are intentionally configured with `reasoning: false`, no `interleaved` field, and text-only modalities because they are speed-optimized models.
 
 ## Limits
 
@@ -361,7 +414,7 @@ Some things were intentionally not added or not assumed.
 
 - no API keys are stored in this repo
 - no default `model` is forced in the template
-- no metadata was guessed for Crof-only variants beyond `id`, `name`, and `limit`, except for Kimi Lightning and GLM-5 Lightning which are intentionally aligned to their standard family metadata
+- no metadata was guessed for Crof-only variants beyond `id`, `name`, and `limit`, except for Lightning variants which are intentionally downgraded to speed-optimized settings (no reasoning, no vision, text-only)
 - `structured_output` was not added because it does not appear to be supported on custom provider model entries in the current OpenCode schema
 
 ## How To Use This Globally
