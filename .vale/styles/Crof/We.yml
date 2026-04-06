@@ -1,0 +1,11 @@
+extends: existence
+message: "Prefer '%s' over weak phrasing."
+level: warning
+ignorecase: true
+tokens:
+  - \bvery\b
+  - \breally\b
+  - \bquite\b
+  - \bsimply\b
+  - \bobviously\b
+  - \bclearly\b

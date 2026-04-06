@@ -1,0 +1,15 @@
+{
+  "name": "crof-ai-opencode-docs",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Documentation linting and secret scanning for Crof-AI-Opencode",
+  "scripts": {
+    "lint": "npm run lint:docs && npm run lint:vale && npm run lint:secrets",
+    "lint:docs": "markdownlint-cli2 README.md",
+    "lint:vale": "vale README.md",
+    "lint:secrets": "node ./scripts/check-secrets.mjs"
+  },
+  "devDependencies": {
+    "markdownlint-cli2": "^0.18.1"
+  }
+}

@@ -1,0 +1,9 @@
+extends: existence
+message: "Consider simplifying '%s'."
+level: suggestion
+ignorecase: true
+tokens:
+  - \butilize\b
+  - \bleverage\b
+  - \bin order to\b
+  - \bas well as\b
