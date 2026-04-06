@@ -222,7 +222,6 @@ The Lightning variants are speed-optimized models. They differ from their base c
 
 - **No reasoning**: Lightning models do not produce extended reasoning output. They are configured with `reasoning: false` and no `interleaved` field.
 - **No vision**: Lightning models are text-only. They are configured with `attachment: false` and `modalities.input: ["text"]`.
-- **Tool calling**: Lightning models still support tool calling, but may be less reliable than base models for complex agentic workflows.
 - **Lower output limits**: Kimi K2.5 Lightning has a much smaller output limit (32768 vs 262144) which can cause truncation on long responses.
 
 If you experience pausing or failed tool calls with Lightning models, switch to the base model (e.g. `moonshotai/kimi-k2.5` instead of `moonshotai/kimi-k2.5:lightning`).
